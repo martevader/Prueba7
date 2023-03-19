@@ -1,0 +1,117 @@
+---
+title: "Prueba 7"
+author: "Marta Muñoz Liébana"
+date: "2023-03-14"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r cars}
+summary(cars)
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+
+#Ejercicio 1. Aplica un contraste de hipótesis basado en la media a y1 e y2
+Para realizar este ejercicio se ha de:
+set.seed(1)
+z <- rnorm(100)
+x <- rpois(100,10.3)
+y <- rbinom(100,1,0.25)
+y1 <- 5*z+x*10+rnorm(100,2,1)
+y2 <- 5*z+x*12+rnorm(100,2,1)
+
+hist(y1)
+hist(y2)
+
+#Ejercicio 2. ¿Por qué decimos que la correlación lineal es una prueba de correlación paramétrica?
+#¿En qué se diferencian las pruebas paramétricas de las no paramétricas?
+Se considera correlación lineal porque asume que los datos que va a analizar tienen una distribución y una relación lineal entre ellos
+Estas se diferencian en que las pruebas paramétricas suponen cosas de los datos, mientras que las otras no
+
+#Ejericio 3.Calcula la correlación entre las variables almacenadas en la tabla ‘data’.
+Para ello se ha de:
+correlacion <- cor(data$longitud, data$ancho)
+correlacion
+correlacion2 <- cor(data$grosor, data$peso)
+correlacion2
+
+#Ejercicio 4. Calcula los coeficientes de correlación de las variables y el nivel de significancia
+install.packages("GGally")
+library(GGally)
+cmatriz <- cor(data)
+pm <- cor.mtest(data)$p
+ggcorr(cmatriz , p.mat = pm, label = TRUE, label_round = 2)
+
+#Ejercicio 5. Emplea una función para obtener en una matriz de correlación lineal, IC 95% y pvalue de todas las variables en el data frame ‘data’
+library(correlation)
+resultados <- correlation(data)
+resultados
+
+#Ejercicio 6.Visualiza gráficamente la correlación lineal existente entre las variables ‘longitud’ y ‘peso’
+plot(data$longitud, data$peso, xlab="Longitud", ylab="Peso")
+ajuste <- lm(peso ~ longitud, data=data)
+abline(ajuste, col="red")
+
+#Ejercicio 7. Emplea la librería `corrplot()` para visualizar la correlación entre variables
+install.packages("corrplot")
+library(corrplot)
+install.packages("see")
+library(see)
+install.packages("tidygraph")
+library(tidygraph)
+install.packages("ggraph")
+library(ggraph)
+gráfica <- plot(resultados)
+gráfica
+
+#Ejercicio 8. A partir de la siguiente secuencia de valores numéricos:
+a. Crear los vectores
+distancia <- c( 1.1,100.2,90.3,5.4,57.5,6.6,34.7,65.8,57.9,86.1)
+n_piezas <- c(110,2,6,98,40,94,31,5,8,10)
+data_frame <- data.frame(distancia = distancia, n_piezas = n_piezas)
+
+b. Calcular el coeficiente de correlación
+cor(data_frame$distancia,data_frame$n_piezas)
+
+c. Calcula el nivel de significancia
+t.test(data_frame, mu = 5)
+
+d. Calcula el Intervalo de confianza al 95% en relación con el coeficiente de correlación
+Para hallar el intervalo de confianza se ha de utilizar el comando:
+t.test(data_frame, mu = 95)
+
+e. ¿Qué intensidad y dirección presentan ambas variables?
+Para calcular la intensiad y dirección de ambas variables empleamos el comando:
+cor(distancia, n_piezas)
+Este nos da un valor negativo de -0.9249824. Al ser este menor que uno nos indica que una de las variables aumenta y la otra disminuye
+
+f. ¿Es significativa esta relación?
+Sí, ya que nos muestra que ambas variables se relacionan negativamente.
+
+g. Resulta apropiado afirmar la correlación (o no) entre variables con un tamaño muestral 
+tan reducido (n=10)
+No, ya que hay una relación negativa en ambas variables.
+
+#Ejercicio 9. Explícame con un ejemplo en R la diferencia entre una relación lineal y monótona entre 2 variable
+Este tipo de relaciones se pueden representar mediante un par de valores (x, y) que satisfacen la ecuación y = mx + b.
+
+#Ejercicio 10.¿Qué tipo de prueba de correlación se aplica a las variables que experimentan una relación monótona?
+Se aplica el coeficiente de correlación de Spearman
